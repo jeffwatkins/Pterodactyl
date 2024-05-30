@@ -18,6 +18,7 @@ class ServerManager {
     let logger = Logger(subsystem: "com.mattstanford.pterodactyl", category: "server")
 
     let pushEndpoint = "/simulatorPush"
+    let updateDefaultsEndpoint = "/updateDefaults"
 
     func startServer(options: [StartupOption: String]) {
         do {
@@ -32,6 +33,7 @@ class ServerManager {
             logger.info("Starting server on port \(port.description, privacy: .public)")
             try server.start(port)
             setupPushEndpoint()
+            setupUpdateDefaultsEndpoint()
         } catch {
             logger.error("Error starting mock server \(error.localizedDescription, privacy: .public)")
         }
@@ -73,7 +75,49 @@ class ServerManager {
         logger.info("Setup \(self.pushEndpoint, privacy: .public)")
         server.POST[pushEndpoint] = response
     }
-    
+
+    private func setupUpdateDefaultsEndpoint() {
+
+        let response: ((HttpRequest) -> HttpResponse) = { [weak self] request in
+            let jsonDecoder = JSONDecoder()
+
+            guard let updateDefaultsRequest = try? jsonDecoder.decode(UpdateDefaultsRequest.self, from: Data(request.body)) else {
+                return HttpResponse.badRequest(nil)
+            }
+
+            let simId = updateDefaultsRequest.simulatorId
+            let appBundleId = updateDefaultsRequest.appBundleId
+            let defaults = updateDefaultsRequest.defaults
+            let dateFormatter = ISO8601DateFormatter()
+            dateFormatter.formatOptions = .withInternetDateTime
+
+            for (key, value) in defaults {
+                let newValue: String
+
+                switch value {
+                    case .string(let value):
+                        newValue = "-string \"\(value)\""
+                    case .int(let value):
+                        newValue = "-int \(value)"
+                    case .float(let value):
+                        newValue = "-float \(value)"
+                    case .bool(let value):
+                        newValue = "-bool \(value ? "TRUE" : "FALSE")"
+                    case .date(let value):
+                        newValue = "-date \(dateFormatter.string(from: value))"
+                }
+                
+                self?.logger.log("setting \(key, privacy: .public) = \(newValue, privacy: .public)")
+                let command = "xcrun simctl spawn \(simId) defaults write \(appBundleId) \(key) \(newValue)"
+                self?.run(command: command)
+            }
+            return .ok(.text("Updated defaults"))
+        }
+
+        logger.info("Setup \(self.updateDefaultsEndpoint, privacy: .public)")
+        server.POST[updateDefaultsEndpoint] = response
+    }
+
     private func createTemporaryPushFile(payload: JSONObject) -> URL? {
         let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
         let temporaryFilename = ProcessInfo().globallyUniqueString + ".apns"
