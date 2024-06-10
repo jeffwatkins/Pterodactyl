@@ -15,7 +15,8 @@ public class Pterodactyl {
     let port: in_port_t
     
     private let pushEndpoint = "simulatorPush"
-    
+    private let updateDefaultsEndpoint = "updateDefaults"
+
     public init(targetAppBundleId: String, host: String = "localhost", port: in_port_t = 8081) {
         self.targetAppBundleId = targetAppBundleId
         self.host = host
@@ -56,6 +57,43 @@ public class Pterodactyl {
         execute(request: request)
     }
 
+    /**
+     Update the test application's ``UserDefaults``.
+
+     Use this method before launching the application under test to modify the ``UserDefaults``. For example:
+     ```
+     pterodactyl.updateDefaults([
+        "Monkey": .string("On the bed"),
+        "WarpDriveEnabled": .bool(true)
+     ])
+     ```
+     **Note: This will only work while the test application is not running.** If called while the test application is running, changes will not necessary be reflected until the next time the test application is launched.
+     */
+    public func updateDefaults(_ defaults: [String: UpdateDefaultsValue]) {
+        let endpoint = "http://\(host):\(port)/\(updateDefaultsEndpoint)"
+
+        guard let endpointUrl = URL(string: endpoint) else {
+            return
+        }
+
+        //Make JSON to send to send to server
+        let json = UpdateDefaultsRequest(
+            simulatorId: ProcessInfo.processInfo.environment["SIMULATOR_UDID"] ?? "booted",
+            appBundleId: targetAppBundleId,
+            defaults: defaults
+        )
+
+        let encoder = JSONEncoder()
+        guard let data = try? encoder.encode(json) else { return }
+
+        var request = URLRequest(url: endpointUrl)
+        request.httpMethod = "POST"
+        request.httpBody = data
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        execute(request: request)
+    }
+
+    /// Internal method to execute an URLRequest and wait for it to complete.
     private func execute(request: URLRequest) {
         let group = DispatchGroup()
         group.enter()

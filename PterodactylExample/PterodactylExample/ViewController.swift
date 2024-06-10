@@ -10,9 +10,17 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet var defaultsValueLabel: UILabel?
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        let userDefaults = UserDefaults.standard
+        if let testValue = userDefaults.string(forKey: "Test") {
+            self.defaultsValueLabel?.text = testValue
+        } else {
+            self.defaultsValueLabel?.text = "MISSING VALUE"
+            self.defaultsValueLabel?.textColor = .red
+        }
     }
 
 }

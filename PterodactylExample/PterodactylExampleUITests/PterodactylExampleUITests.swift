@@ -19,6 +19,22 @@ class PterodactylExampleUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    func testUpdateUserDefaults() throws {
+        let pterodactyl = Pterodactyl(targetAppBundleId: "com.mattstanford.PterodactylExample")
+        let testValue = UUID()
+        pterodactyl.updateDefaults([
+            "Test": .string(testValue.uuidString)
+        ])
+
+        app.launch()
+
+        waitForElementToAppear(object: app.staticTexts["Pterodactyl Example"])
+
+        let defaultsValue = app.staticTexts["DefaultsValue"].firstMatch
+        XCTAssertTrue(defaultsValue.exists)
+        XCTAssertEqual(defaultsValue.label, testValue.uuidString)
+    }
+
     func testSimulatorPush() throws {
         app.launch()
 

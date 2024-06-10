@@ -7,8 +7,22 @@
 
 import Foundation
 
+public enum UpdateDefaultsValue: Codable {
+    case string(String)
+    case int(Int)
+    case float(Double)
+    case bool(Bool)
+    case date(Date)
+}
+
 struct PushRequest: Codable {
     let simulatorId: String
     let appBundleId: String
     let pushPayload: JSONObject
+}
+
+struct UpdateDefaultsRequest: Codable {
+    let simulatorId: String
+    let appBundleId: String
+    let defaults: [String: UpdateDefaultsValue]
 }
