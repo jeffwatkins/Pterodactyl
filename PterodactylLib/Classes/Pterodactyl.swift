@@ -13,9 +13,6 @@ public class Pterodactyl {
     let targetAppBundleId: String
     let host: String
     let port: in_port_t
-    
-    private let pushEndpoint = "simulatorPush"
-    private let updateDefaultsEndpoint = "updateDefaults"
 
     public init(targetAppBundleId: String, host: String = "localhost", port: in_port_t = 8081) {
         self.targetAppBundleId = targetAppBundleId
@@ -34,11 +31,7 @@ public class Pterodactyl {
     }
     
     public func triggerSimulatorNotification(withFullPayload payload: [String: Any]) {
-        let endpoint = "http://\(host):\(port)/\(pushEndpoint)"
-
-        guard let endpointUrl = URL(string: endpoint) else {
-            return
-        }
+        guard let endpointUrl = url(for: .push) else { return }
 
         //Make JSON to send to send to server
         let json = PushRequest(
@@ -70,11 +63,7 @@ public class Pterodactyl {
      **Note: This will only work while the test application is not running.** If called while the test application is running, changes will not necessary be reflected until the next time the test application is launched.
      */
     public func updateDefaults(_ defaults: [String: UpdateDefaultsValue]) {
-        let endpoint = "http://\(host):\(port)/\(updateDefaultsEndpoint)"
-
-        guard let endpointUrl = URL(string: endpoint) else {
-            return
-        }
+        guard let endpointUrl = url(for: .updateDefaults) else { return }
 
         //Make JSON to send to send to server
         let json = UpdateDefaultsRequest(
@@ -91,6 +80,39 @@ public class Pterodactyl {
         request.httpBody = data
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         execute(request: request)
+    }
+
+    public func deleteDefaults(for keys: [String]) {
+        guard let endpointUrl = url(for: .deleteDefaults) else { return }
+
+        //Make JSON to send to send to server
+        let json = DeleteDefaultsRequest(
+            simulatorId: ProcessInfo.processInfo.environment["SIMULATOR_UDID"] ?? "booted",
+            appBundleId: targetAppBundleId,
+            keys: keys
+        )
+
+        let encoder = JSONEncoder()
+        guard let data = try? encoder.encode(json) else { return }
+
+        var request = URLRequest(url: endpointUrl)
+        request.httpMethod = "POST"
+        request.httpBody = data
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        execute(request: request)
+    }
+
+    public func withDefaults(_ defaults: [String: UpdateDefaultsValue], block: (() throws -> Void)) rethrows {
+        updateDefaults(defaults)
+        defer {
+            // Ensure we delete the defaults values even if the block we called throws an error.
+            deleteDefaults(for: Array(defaults.keys))
+        }
+        try block()
+    }
+
+    private func url(for endpoint: Endpoint) -> URL? {
+        return URL(string: "http://\(host):\(port)/\(endpoint.rawValue)")
     }
 
     /// Internal method to execute an URLRequest and wait for it to complete.

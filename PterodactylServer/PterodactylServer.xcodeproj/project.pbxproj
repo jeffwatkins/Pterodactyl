@@ -11,6 +11,7 @@
 		1F84BBAF2C07D32D00F58BCE /* JSONCodingKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F84BBAE2C07D32D00F58BCE /* JSONCodingKeys.swift */; };
 		1F84BBB12C07D35800F58BCE /* JSONObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F84BBB02C07D35800F58BCE /* JSONObject.swift */; };
 		1FC7828A2C07E594007AAF25 /* Requests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC782892C07E594007AAF25 /* Requests.swift */; };
+		1FDC80DB2C093430005032D2 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC80DA2C093430005032D2 /* Endpoint.swift */; };
 		C9093FD4241D3A5F00B7D1BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9093FD3241D3A5F00B7D1BA /* AppDelegate.swift */; };
 		C9093FD6241D3A5F00B7D1BA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9093FD5241D3A5F00B7D1BA /* ViewController.swift */; };
 		C9093FD8241D3A6100B7D1BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9093FD7241D3A6100B7D1BA /* Assets.xcassets */; };
@@ -23,6 +24,7 @@
 		1F84BBAE2C07D32D00F58BCE /* JSONCodingKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JSONCodingKeys.swift; path = ../../PterodactylLib/Classes/JSONCodingKeys.swift; sourceTree = "<group>"; };
 		1F84BBB02C07D35800F58BCE /* JSONObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JSONObject.swift; path = ../../PterodactylLib/Classes/JSONObject.swift; sourceTree = "<group>"; };
 		1FC782892C07E594007AAF25 /* Requests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Requests.swift; path = ../../PterodactylLib/Classes/Requests.swift; sourceTree = "<group>"; };
+		1FDC80DA2C093430005032D2 /* Endpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Endpoint.swift; path = ../../PterodactylLib/Classes/Endpoint.swift; sourceTree = "<group>"; };
 		C9093FD0241D3A5F00B7D1BA /* PterodactylServer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PterodactylServer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9093FD3241D3A5F00B7D1BA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C9093FD5241D3A5F00B7D1BA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -82,6 +84,7 @@
 				1F84BBB02C07D35800F58BCE /* JSONObject.swift */,
 				1F84BBAE2C07D32D00F58BCE /* JSONCodingKeys.swift */,
 				1FC782892C07E594007AAF25 /* Requests.swift */,
+				1FDC80DA2C093430005032D2 /* Endpoint.swift */,
 			);
 			path = PterodactylServer;
 			sourceTree = "<group>";
@@ -173,6 +176,7 @@
 			files = (
 				C9093FD6241D3A5F00B7D1BA /* ViewController.swift in Sources */,
 				C9093FF2241D521A00B7D1BA /* ServerManager.swift in Sources */,
+				1FDC80DB2C093430005032D2 /* Endpoint.swift in Sources */,
 				1F84BBAF2C07D32D00F58BCE /* JSONCodingKeys.swift in Sources */,
 				1F84BBB12C07D35800F58BCE /* JSONObject.swift in Sources */,
 				C9824A0F2729DE080025F241 /* StartupOption.swift in Sources */,

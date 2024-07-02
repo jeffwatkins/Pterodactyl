@@ -26,3 +26,9 @@ struct UpdateDefaultsRequest: Codable {
     let appBundleId: String
     let defaults: [String: UpdateDefaultsValue]
 }
+
+struct DeleteDefaultsRequest: Codable {
+    let simulatorId: String
+    let appBundleId: String
+    let keys: [String]
+}
