@@ -35,6 +35,32 @@ class PterodactylExampleUITests: XCTestCase {
         XCTAssertEqual(defaultsValue.label, testValue.uuidString)
     }
 
+    func testDeleteUserDefaults() throws {
+        let pterodactyl = Pterodactyl(targetAppBundleId: "com.mattstanford.PterodactylExample")
+        let testValue = UUID()
+        pterodactyl.updateDefaults([
+            "Test": .string(testValue.uuidString)
+        ])
+
+        app.launch()
+
+        waitForElementToAppear(object: app.staticTexts["Pterodactyl Example"])
+
+        let defaultsValue = app.staticTexts["DefaultsValue"].firstMatch
+        XCTAssertTrue(defaultsValue.exists)
+        XCTAssertEqual(defaultsValue.label, testValue.uuidString)
+
+        app.terminate()
+
+        pterodactyl.deleteDefaults(for: ["Test"])
+        app.launch()
+
+        waitForElementToAppear(object: app.staticTexts["Pterodactyl Example"])
+
+        XCTAssertTrue(defaultsValue.exists)
+        XCTAssertEqual(defaultsValue.label, "MISSING VALUE")
+    }
+
     func testSimulatorPush() throws {
         app.launch()
 

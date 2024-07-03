@@ -10,7 +10,7 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		8lNwsXX8BfvEkzPcsOxYb6AfhIs=
+		zI7Ke/0gZ/M3p/3k9kvyTg47NFY=
 		</data>
 		<key>Resources/Base.lproj/Main.storyboardc/Info.plist</key>
 		<data>
@@ -18,11 +18,29 @@
 		</data>
 		<key>Resources/Base.lproj/Main.storyboardc/MainMenu.nib</key>
 		<data>
-		HtpJpaWTf1paZQ4Ckb3EKTkU5Pc=
+		UEtjpeLWJY9orNWNEKtt/KnE3Uc=
 		</data>
 	</dict>
 	<key>files2</key>
 	<dict>
+		<key>MacOS/PterodactylServer.debug.dylib</key>
+		<dict>
+			<key>cdhash</key>
+			<data>
+			7GHv997RHu+t8TbiUBmdh39FQjQ=
+			</data>
+			<key>requirement</key>
+			<string>cdhash H"ec61eff7ded11eefadf136e250199d877f454234"</string>
+		</dict>
+		<key>MacOS/__preview.dylib</key>
+		<dict>
+			<key>cdhash</key>
+			<data>
+			1/9/eGyRqRh9/gp5HhGcfZ7xBrA=
+			</data>
+			<key>requirement</key>
+			<string>cdhash H"d7ff7f786c91a9187dfe0a791e119c7d9ef106b0"</string>
+		</dict>
 		<key>Resources/AppIcon.icns</key>
 		<dict>
 			<key>hash2</key>
@@ -34,7 +52,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Sd8KT2USbY3ljIFy6OAxUOmDK+UPVwx63Jqpf2fOc44=
+			nJ0xjTT6R5SN4hKOTwdfwPGl9PexHQ+AnA/cH6XnkcM=
 			</data>
 		</dict>
 		<key>Resources/Base.lproj/Main.storyboardc/Info.plist</key>
@@ -48,7 +66,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			312E1p7asBEfScKWhLW1FYg1IwABETQy4Jc1uWlKeBg=
+			pzfkkxDlNgraGehWdaLom9zDGm358f9KHSV50oTg+ik=
 			</data>
 		</dict>
 	</dict>
