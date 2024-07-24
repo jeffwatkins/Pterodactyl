@@ -14,7 +14,9 @@ public class Pterodactyl {
     let host: String
     let port: in_port_t
 
-    public init(targetAppBundleId: String, host: String = "localhost", port: in_port_t = 8081) {
+    public static let defaultPort = defaultPortFromEnvironment()
+
+    public init(targetAppBundleId: String, host: String = "localhost", port: in_port_t = Pterodactyl.defaultPort) {
         self.targetAppBundleId = targetAppBundleId
         self.host = host
         self.port = port
@@ -127,5 +129,14 @@ public class Pterodactyl {
         task.resume()
         group.wait()
     }
-    
+
+    private static func defaultPortFromEnvironment() -> in_port_t {
+        let defaultPort: in_port_t = 8081
+        guard let portString = ProcessInfo.processInfo.environment["PTERODACTYL_PORT"] else {
+            return defaultPort
+        }
+        let port = in_port_t(portString) ?? defaultPort
+        return port
+    }
+
 }
