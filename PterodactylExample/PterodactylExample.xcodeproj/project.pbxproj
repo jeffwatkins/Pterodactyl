@@ -142,7 +142,6 @@
 				C9D79BC82421B7B9009F111A /* Sources */,
 				C9D79BC92421B7B9009F111A /* Frameworks */,
 				C9D79BCA2421B7B9009F111A /* Resources */,
-				C9258B8E24280BE8003D026E /* Run Server Run Script */,
 			);
 			buildRules = (
 			);
@@ -212,27 +211,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		C9258B8E24280BE8003D026E /* Run Server Run Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Run Server Run Script";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nopen -a \"${SOURCE_ROOT}/../PterodactylLib/Built_Product/PterodactylServer.app\"\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		C9D79BB22421B7B9009F111A /* Sources */ = {
