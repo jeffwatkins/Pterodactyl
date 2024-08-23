@@ -76,8 +76,11 @@ class ServerManager {
                 } catch {
                     self.logger.error("Error removing file!")
                 }
-                
-                return .ok(.text("Ran command: \(command)"))
+                return .ok(.json([
+                    "success": true,
+                    "command": command,
+                    "message": "Notification sent"
+                ]))
             } else {
                 return .internalServerError
             }
@@ -124,7 +127,11 @@ class ServerManager {
                 let command = "xcrun simctl spawn \(simId) defaults write \(appBundleId) \(key) \(newValue)"
                 self.run(command: command)
             }
-            return .ok(.text("Updated defaults"))
+            return .ok(.json([
+                "success": true,
+                "command": command,
+                "message": "Defaults updated"
+            ]))
         }
 
         logger.info("Setup update defaults")
@@ -151,7 +158,11 @@ class ServerManager {
                 let command = "xcrun simctl spawn \(simId) defaults delete \(appBundleId) \(key)"
                 self.run(command: command)
             }
-            return .ok(.text("Updated defaults"))
+            return .ok(.json([
+                "success": true,
+                "command": command,
+                "message": "Defaults deleted"
+            ]))
         }
 
         logger.info("Setup delete defaults")

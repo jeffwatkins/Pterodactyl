@@ -22,7 +22,7 @@ class PterodactylExampleUITests: XCTestCase {
     func testUpdateUserDefaults() throws {
         let pterodactyl = Pterodactyl(targetAppBundleId: "com.mattstanford.PterodactylExample")
         let testValue = UUID()
-        pterodactyl.updateDefaults([
+        try pterodactyl.updateDefaults([
             "Test": .string(testValue.uuidString)
         ])
 
@@ -38,7 +38,7 @@ class PterodactylExampleUITests: XCTestCase {
     func testDeleteUserDefaults() throws {
         let pterodactyl = Pterodactyl(targetAppBundleId: "com.mattstanford.PterodactylExample")
         let testValue = UUID()
-        pterodactyl.updateDefaults([
+        try pterodactyl.updateDefaults([
             "Test": .string(testValue.uuidString)
         ])
 
@@ -52,7 +52,7 @@ class PterodactylExampleUITests: XCTestCase {
 
         app.terminate()
 
-        pterodactyl.deleteDefaults(for: ["Test"])
+        try pterodactyl.deleteDefaults(for: ["Test"])
         app.launch()
 
         waitForElementToAppear(object: app.staticTexts["Pterodactyl Example"])
@@ -88,7 +88,7 @@ class PterodactylExampleUITests: XCTestCase {
         sleep(1)
 
         //Trigger a push notification
-        pterodactyl.triggerSimulatorNotification(withMessage: "here's a simple message")
+        try pterodactyl.triggerSimulatorNotification(withMessage: "here's a simple message")
         
         //Tap the notification when it appears
         let springBoardNotification = springboard.otherElements.descendants(matching: .any)["NotificationShortLookView"]

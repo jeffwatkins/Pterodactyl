@@ -9,7 +9,21 @@
 import Foundation
 
 public class Pterodactyl {
-    
+
+    public enum RequestError: Error, CustomStringConvertible {
+        case requestFailed
+        case serverNotFound
+
+        public var description: String {
+            switch self {
+                case .requestFailed:
+                    return "Request failed"
+                case .serverNotFound:
+                    return "Server did not respond"
+            }
+        }
+    }
+
     let targetAppBundleId: String
     let host: String
     let port: in_port_t
@@ -22,17 +36,17 @@ public class Pterodactyl {
         self.port = port
     }
     
-    public func triggerSimulatorNotification(withMessage message: String, additionalKeys: [String: Any]? = nil) {
+    public func triggerSimulatorNotification(withMessage message: String, additionalKeys: [String: Any]? = nil) throws {
         var innerAlert: [String: Any] = ["alert": message]
         if let additionalKeys = additionalKeys {
             //Merge dictionaries, override duplicates with the ones supplied by "additionalKeys"
             innerAlert = innerAlert.merging(additionalKeys) { (_, new) in new }
         }
         let payload = ["aps": innerAlert]
-        triggerSimulatorNotification(withFullPayload: payload)
+        try triggerSimulatorNotification(withFullPayload: payload)
     }
     
-    public func triggerSimulatorNotification(withFullPayload payload: [String: Any]) {
+    public func triggerSimulatorNotification(withFullPayload payload: [String: Any]) throws {
         guard let endpointUrl = url(for: .push) else { return }
 
         //Make JSON to send to send to server
@@ -49,7 +63,7 @@ public class Pterodactyl {
         request.httpMethod = "POST"
         request.httpBody = data
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        execute(request: request)
+        try execute(request: request)
     }
 
     /**
@@ -64,7 +78,7 @@ public class Pterodactyl {
      ```
      **Note: This will only work while the test application is not running.** If called while the test application is running, changes will not necessary be reflected until the next time the test application is launched.
      */
-    public func updateDefaults(_ defaults: [String: UpdateDefaultsValue]) {
+    public func updateDefaults(_ defaults: [String: UpdateDefaultsValue]) throws {
         guard let endpointUrl = url(for: .updateDefaults) else { return }
 
         //Make JSON to send to send to server
@@ -81,10 +95,10 @@ public class Pterodactyl {
         request.httpMethod = "POST"
         request.httpBody = data
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        execute(request: request)
+        try execute(request: request)
     }
 
-    public func deleteDefaults(for keys: [String]) {
+    public func deleteDefaults(for keys: [String]) throws {
         guard let endpointUrl = url(for: .deleteDefaults) else { return }
 
         //Make JSON to send to send to server
@@ -101,14 +115,18 @@ public class Pterodactyl {
         request.httpMethod = "POST"
         request.httpBody = data
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        execute(request: request)
+        try execute(request: request)
     }
 
-    public func withDefaults(_ defaults: [String: UpdateDefaultsValue], block: (() throws -> Void)) rethrows {
-        updateDefaults(defaults)
+    public func withDefaults(_ defaults: [String: UpdateDefaultsValue], block: (() throws -> Void)) throws {
+        try updateDefaults(defaults)
         defer {
             // Ensure we delete the defaults values even if the block we called throws an error.
-            deleteDefaults(for: Array(defaults.keys))
+            do {
+                try deleteDefaults(for: Array(defaults.keys))
+            } catch {
+                // Nothing we can do about the error here.
+            }
         }
         try block()
     }
@@ -118,16 +136,30 @@ public class Pterodactyl {
     }
 
     /// Internal method to execute an URLRequest and wait for it to complete.
-    private func execute(request: URLRequest) {
+    private func execute(request: URLRequest) throws {
+        var finalError: (any Error)?
+        var finalResponse: HTTPURLResponse?
+
         let group = DispatchGroup()
         group.enter()
-        let task = URLSession.shared.dataTask(with: request) { _, _, _ in
-            // Just wait for the task to complete…
+        let task = URLSession.shared.dataTask(with: request) { (_, response, error) in
+            finalResponse = response as? HTTPURLResponse
+            finalError = error
             group.leave()
         }
-
         task.resume()
         group.wait()
+
+        if let error = finalError {
+            throw RequestError.serverNotFound
+        }
+
+        guard let response = finalResponse else {
+            throw RequestError.requestFailed
+        }
+        guard response.statusCode == 200 else {
+            throw RequestError.requestFailed
+        }
     }
 
     private static func defaultPortFromEnvironment() -> in_port_t {
